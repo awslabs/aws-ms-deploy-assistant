@@ -26,7 +26,7 @@ Using Visual Studio Post Build Events, MSBuild Events or a customized Team Found
 * Stored Credential Profile Management  
   * Enables command line management of stored credential profiles  
 
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Process Workflow")
+![Process Worflow](https://github.com/awslabs/aws-ms-deploy-assistant/blob/master/DemoSite/Images/process.png "Process Workflow")
 
 The AWS EC2 Deployment Assistant will automatically generate an AWS CodeDeploy service deployment definitions, an AppSpec.yml file as well as PowerShell scripts to execute a simple deployment to an IIS root site. For more complex deployment requirements, we recommend that you include an AppSpec file and any required deployment scripts in your build output. If an AppSpec is already present, the AWS EC2 Deployment Assistant will skip auto generation. 
 
