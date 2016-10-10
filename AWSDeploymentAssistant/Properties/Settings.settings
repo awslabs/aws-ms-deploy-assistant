@@ -1,0 +1,65 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AWSDeploymentAssistant.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DefaultLoggerName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Default</Value>
+    </Setting>
+    <Setting Name="PublishFileTypesExcludePattern" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;obj\&lt;/string&gt;
+  &lt;string&gt;Web.Debug.config&lt;/string&gt;
+  &lt;string&gt;Web.Release.config&lt;/string&gt;
+  &lt;string&gt;packages.config&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="PublishFileTypesIncludePattern" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;.dll&lt;/string&gt;
+  &lt;string&gt;.css&lt;/string&gt;
+  &lt;string&gt;.js&lt;/string&gt;
+  &lt;string&gt;.xml&lt;/string&gt;
+  &lt;string&gt;.xsl&lt;/string&gt;
+  &lt;string&gt;.xslt&lt;/string&gt;
+  &lt;string&gt;.xsd&lt;/string&gt;
+  &lt;string&gt;.htm&lt;/string&gt;
+  &lt;string&gt;.html&lt;/string&gt;
+  &lt;string&gt;.xhtml&lt;/string&gt;
+  &lt;string&gt;.cshtml&lt;/string&gt;
+  &lt;string&gt;.aspx&lt;/string&gt;
+  &lt;string&gt;.ascx&lt;/string&gt;
+  &lt;string&gt;.asax&lt;/string&gt;
+  &lt;string&gt;.asmx&lt;/string&gt;
+  &lt;string&gt;.axd&lt;/string&gt;
+  &lt;string&gt;.config&lt;/string&gt;
+  &lt;string&gt;.ico&lt;/string&gt;
+  &lt;string&gt;.jpg&lt;/string&gt;
+  &lt;string&gt;.gif&lt;/string&gt;
+  &lt;string&gt;.png&lt;/string&gt;
+  &lt;string&gt;.eot&lt;/string&gt;
+  &lt;string&gt;.svg&lt;/string&gt;
+  &lt;string&gt;.ttf&lt;/string&gt;
+  &lt;string&gt;.woff&lt;/string&gt;
+  &lt;string&gt;.woff2&lt;/string&gt;
+  &lt;string&gt;.otf&lt;/string&gt;
+  &lt;string&gt;.exe&lt;/string&gt;
+  &lt;string&gt;.json&lt;/string&gt;
+  &lt;string&gt;.swf&lt;/string&gt;
+  &lt;string&gt;.swz&lt;/string&gt;
+  &lt;string&gt;.ashx&lt;/string&gt;
+  &lt;string&gt;.asp&lt;/string&gt;
+  &lt;string&gt;.rdf&lt;/string&gt;
+  &lt;string&gt;.flv&lt;/string&gt;
+  &lt;string&gt;.svc&lt;/string&gt;
+  &lt;string&gt;.mime&lt;/string&gt;
+  &lt;string&gt;.rss&lt;/string&gt;
+  &lt;string&gt;.atom&lt;/string&gt;
+  &lt;string&gt;.yml&lt;/string&gt;
+  &lt;string&gt;.ps1&lt;/string&gt;
+  &lt;string&gt;.zip&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

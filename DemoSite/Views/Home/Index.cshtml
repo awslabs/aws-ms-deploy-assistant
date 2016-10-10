@@ -1,0 +1,108 @@
+﻿@{
+    Page.Title = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!--
+Copyright 2016-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
+the License. A copy of the License is located at http://aws.amazon.com/apache2.0/ or in the "license" file accompanying
+this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+or implied. See the License for the specific language governing permissions and limitations under the License.
+-->
+<div class="jumbotron">
+    <h1>AWS EC2 Deployment Assistant for Microsoft Developer Platforms</h1>
+    <p class="lead">This site is an example application hosted in AWS and deployed from Microsoft ecosystem developer tools using AWS Developer Tool services.</p>
+    <p><a href="https://aws.amazon.com/" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <p>Deployment automation from Microsoft Developer platforms (Microsoft Visual Studio and/or Microsoft Team Foundation Server) to AWS EC2 instances is a common customer requirement. AWS Developer Tools can support the continuos delivery/continuous deployment requirements for AWS customers leveraging these development platforms at a very low cost while monitoring an maintaining application availability. This capability comes through the AWS CodePipline and CodeDeploy services which can consume the precomipled output of the Microsoft Build System. To begin this pipeline, build output must be packaged and uploaded to an AWS S3 staging location where it is pickedup by the AWS CodePipeline service and can then flow through a customer defined continous delivery workflow.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>CodePipeline</h2>
+        <p>AWS CodePipeline is a continuous delivery service for fast and reliable application updates and was used to deploy this website.</p>
+        <p><a class="btn btn-default" href="https://aws.amazon.com/codepipeline/">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-6">
+        <h2>CodeDeploy</h2>
+        <p>AWS CodeDeploy is a service that automates code deployments to any instance, including Amazon EC2 instances and instances running on-premises.</p>
+        <p><a class="btn btn-default" href="https://aws.amazon.com/codedeploy/">Learn more &raquo;</a></p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h2>The Tool</h2>
+        <p>
+            The AWS EC2 Deployment Assistant for Microsoft Developer Platforms is a utility application that enables integration of the AWS CodePipeline and CodeDeploy Services into the Visual Studio or Team Foundation Server build process. It handles the packaging and upload of successful builds to the AWS S3 service staging location where it is pickedup by the AWS CodePipeline service and can then flow through a customer defined continous delivery workflow.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>How It Works</h2>
+        <p>
+            Using Visual Studio Post Build Events, MSBuild Events or a customized Team Foundation Server (TFS) Build Template, the AWS Deployment Assistant is triggered and runs against a sucessful build's output.
+        </p>
+        <ul>
+            <li>
+                Build Output Preparation
+                <ul>
+                    <li>Automates the packaging and preparation of build output</li>
+                    <li>
+                        Extensible plugin framework enables custom task insertion
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Create Deployment Package
+                <ul>
+                    <li>
+                        Creates zip format archive of build output
+                    </li>
+                    <li>
+                        Filtered by include and exclude expression
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Upload Package to S3 Drop Location
+                <ul>
+                    <li>
+                        Package pushed to S3 drop location where CodePipeline can pickup and execution workflow
+                    </li>
+                    <li>
+                        Uses stored credential profile
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Stored Credential Profile Management
+                <ul>
+                    <li>
+                        Enables command line management of stored credential profiles
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <img src="~/Images/process.png" class="img-responsive" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <p>
+            The AWS EC2 Deployment Assistant will automatically generate an AWS CodeDeploy service deployment definitions, an AppSpec.yml file as well as PowerShell scripts to execute a simple deployment to an IIS root site. For more complex deployment requirements, we recommend that you include an AppSpec file and any required deployment scripts in your build output. If an AppSpec is already present, the AWS EC2 Deployment Assistant will skip auto generation.
+        </p>
+    </div>
+</div>

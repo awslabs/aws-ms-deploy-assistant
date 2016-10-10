@@ -1,0 +1,1 @@
+﻿Place your deployment tasks in this folder. A deployment task must implement IDeploymentTask.

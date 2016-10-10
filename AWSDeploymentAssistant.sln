@@ -1,0 +1,77 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWSDeploymentAssistant", "AWSDeploymentAssistant\AWSDeploymentAssistant.csproj", "{3396B4F3-7C27-4F6D-B512-0B3D5CDFF9AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeDeployPlugin", "CodeDeployPlugin\CodeDeployPlugin.csproj", "{1F737F79-B171-4D30-8EA1-DAA04FCA0903}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoSite", "DemoSite\DemoSite.csproj", "{CE325596-FA44-45A2-A995-C3C09485DDA0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Environment Setup", "Environment Setup", "{6846DB8E-81FA-4C7B-8E41-0A464FD20D9D}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\Initialize-DevEnvironment.ps1 = Solution Items\Initialize-DevEnvironment.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6DC82513-0AFB-4530-9752-F80BB78555ED}"
+	ProjectSection(SolutionItems) = preProject
+		CHANGELOG.md = CHANGELOG.md
+		CONTRIBUTING.md = CONTRIBUTING.md
+		ISSUE_TEMPLATE.md = ISSUE_TEMPLATE.md
+		License.bootstrap.txt = License.bootstrap.txt
+		License.CommandLine.txt = License.CommandLine.txt
+		License.jQuery.txt = License.jQuery.txt
+		License.log4net.txt = License.log4net.txt
+		License.Newtonsoft.Json.txt = License.Newtonsoft.Json.txt
+		License.txt = License.txt
+		Notice.txt = Notice.txt
+		Readme.md = Readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Properties", "Properties", "{2F69F15F-D898-42A9-993C-D736E18AD89D}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Items\Properties\GlobalAssemblyInfo.cs = Solution Items\Properties\GlobalAssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishToEC2", "PublishToEC2\PublishToEC2.csproj", "{CB7D685A-5319-4988-A29E-539E9AD10988}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Deploy|Any CPU = Deploy|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3396B4F3-7C27-4F6D-B512-0B3D5CDFF9AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3396B4F3-7C27-4F6D-B512-0B3D5CDFF9AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3396B4F3-7C27-4F6D-B512-0B3D5CDFF9AD}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU
+		{3396B4F3-7C27-4F6D-B512-0B3D5CDFF9AD}.Deploy|Any CPU.Build.0 = Deploy|Any CPU
+		{3396B4F3-7C27-4F6D-B512-0B3D5CDFF9AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3396B4F3-7C27-4F6D-B512-0B3D5CDFF9AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F737F79-B171-4D30-8EA1-DAA04FCA0903}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F737F79-B171-4D30-8EA1-DAA04FCA0903}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F737F79-B171-4D30-8EA1-DAA04FCA0903}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU
+		{1F737F79-B171-4D30-8EA1-DAA04FCA0903}.Deploy|Any CPU.Build.0 = Deploy|Any CPU
+		{1F737F79-B171-4D30-8EA1-DAA04FCA0903}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F737F79-B171-4D30-8EA1-DAA04FCA0903}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE325596-FA44-45A2-A995-C3C09485DDA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE325596-FA44-45A2-A995-C3C09485DDA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE325596-FA44-45A2-A995-C3C09485DDA0}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU
+		{CE325596-FA44-45A2-A995-C3C09485DDA0}.Deploy|Any CPU.Build.0 = Deploy|Any CPU
+		{CE325596-FA44-45A2-A995-C3C09485DDA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE325596-FA44-45A2-A995-C3C09485DDA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB7D685A-5319-4988-A29E-539E9AD10988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB7D685A-5319-4988-A29E-539E9AD10988}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB7D685A-5319-4988-A29E-539E9AD10988}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB7D685A-5319-4988-A29E-539E9AD10988}.Deploy|Any CPU.Build.0 = Debug|Any CPU
+		{CB7D685A-5319-4988-A29E-539E9AD10988}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB7D685A-5319-4988-A29E-539E9AD10988}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2F69F15F-D898-42A9-993C-D736E18AD89D} = {6DC82513-0AFB-4530-9752-F80BB78555ED}
+	EndGlobalSection
+EndGlobal

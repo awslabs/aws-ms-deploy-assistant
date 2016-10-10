@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Commands package="guidPublishToEC2SolutionExplorerContextMenuPackage">
+    <Groups>
+      <Group guid="guidPublishToEC2SolutionExplorerContextMenuPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidPublishToEC2SolutionExplorerContextMenuPackageCmdSet" id="TopLevelMenu"/>
+      </Group>
+    </Groups>
+    <Menus>
+        <Menu guid="guidPublishToEC2SolutionExplorerContextMenuPackageCmdSet" id="TopLevelMenu" priority="0x700" type="Menu">
+          <Parent guid="guidSHLMainMenu" id="IDG_VS_MM_TOOLSADDINS" />
+          <Strings>
+            <ButtonText>TestMenu</ButtonText>
+            <CommandName>TestMenu</CommandName>
+          </Strings>
+      </Menu>
+    </Menus>
+  </Commands>
+  <Symbols>
+    <GuidSymbol name="guidPublishToEC2SolutionExplorerContextMenuPackage" value="{316ee85f-78ae-47a3-93a5-bd61ceec55bb}" />
+    <GuidSymbol name="guidPublishToEC2SolutionExplorerContextMenuPackageCmdSet" value="{04479d2c-bc6b-42db-8ac8-42229aaeb0f2}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="TopLevelMenu" value="0x1021"/>
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>
