@@ -19,12 +19,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		CHANGELOG.md = CHANGELOG.md
 		CONTRIBUTING.md = CONTRIBUTING.md
 		ISSUE_TEMPLATE.md = ISSUE_TEMPLATE.md
+		LICENSE = LICENSE
 		License.bootstrap.txt = License.bootstrap.txt
 		License.CommandLine.txt = License.CommandLine.txt
 		License.jQuery.txt = License.jQuery.txt
 		License.log4net.txt = License.log4net.txt
 		License.Newtonsoft.Json.txt = License.Newtonsoft.Json.txt
-		License.txt = License.txt
 		Notice.txt = Notice.txt
 		Readme.md = Readme.md
 	EndProjectSection

@@ -125,6 +125,9 @@
       <Link>Readme.md</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="..\LICENSE">
+      <Link>LICENSE</Link>
+    </None>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
@@ -163,10 +166,6 @@
     </Content>
     <Content Include="..\License.Newtonsoft.Json.txt">
       <Link>License.Newtonsoft.Json.txt</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\License.txt">
-      <Link>License.txt</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="..\License.YamlDotNet.txt">

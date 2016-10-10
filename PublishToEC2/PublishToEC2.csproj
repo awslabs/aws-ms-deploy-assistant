@@ -68,6 +68,9 @@
     <Content Include="..\Solution Items\Resources\aws_preview.gif">
       <Link>Resources\aws_preview.gif</Link>
     </Content>
+    <None Include="..\LICENSE">
+      <Link>LICENSE</Link>
+    </None>
     <None Include="AWSDeploymentAssistant.licenseheader" />
     <None Include="Properties\Key.snk" />
     <None Include="packages.config" />
@@ -76,10 +79,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\License.txt">
-      <Link>License.txt</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\Notice.txt">
       <Link>Notice.txt</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

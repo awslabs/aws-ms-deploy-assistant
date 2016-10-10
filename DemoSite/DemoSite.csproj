@@ -115,9 +115,6 @@
     <Content Include="..\License.jQuery.txt">
       <Link>License.jQuery.txt</Link>
     </Content>
-    <Content Include="..\License.txt">
-      <Link>License.txt</Link>
-    </Content>
     <Content Include="..\Notice.txt">
       <Link>Notice.txt</Link>
     </Content>
@@ -140,6 +137,9 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="..\Readme.md">
       <Link>Readme.md</Link>
+    </Content>
+    <Content Include="..\LICENSE">
+      <Link>LICENSE</Link>
     </Content>
     <None Include="Scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.4.js" />
