@@ -116,7 +116,7 @@ namespace AWSDeploymentAssistant
             }
             catch (Exception ex)
             {
-                Program.Logger.Fatal("An error occured while parsing command line arguments.", ex);
+                Program.Logger.Fatal("An error occurred while parsing command line arguments.", ex);
                 Environment.Exit(Program.ERROR_BAD_ARGUMENTS);
             }
             finally
@@ -172,7 +172,7 @@ namespace AWSDeploymentAssistant
             }
             catch (Exception ex)
             {
-                Program.Logger.Fatal("An error occured while running profile request.", ex);
+                Program.Logger.Fatal("An error occurred while running profile request.", ex);
             }
 
             return result;
@@ -193,7 +193,7 @@ namespace AWSDeploymentAssistant
             }
             catch (Exception ex)
             {
-                Program.Logger.Fatal("An error occured while running pipeline.", ex);
+                Program.Logger.Fatal("An error occurred while running pipeline.", ex);
             }
 
             return result;

@@ -89,7 +89,7 @@ namespace AWSDeploymentAssistant
             }
             finally
             {
-                Program.Logger.Info("Serializing reqeust object, temp dirctory object and output file object.");
+                Program.Logger.Info("Serializing request object, temp directory object, temp content directory object and output file object.");
                 Program.Logger.Info(JsonConvert.SerializeObject(this.Request));
                 Program.Logger.Info(JsonConvert.SerializeObject(this.TempDirectory));
                 Program.Logger.Info(JsonConvert.SerializeObject(this.TempContentDirectory));

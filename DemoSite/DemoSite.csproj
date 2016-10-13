@@ -125,8 +125,13 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="health.htm" />
+    <Content Include="health.min.htm">
+      <DependentUpon>health.htm</DependentUpon>
+    </Content>
     <Content Include="Images\2016-08-23 12_20_22-AWS CodeDeploy Management.png" />
     <Content Include="Images\codepipeline.png" />
+    <Content Include="Images\command-line-args.png" />
+    <Content Include="Images\msbuild-target.png" />
     <Content Include="Images\process.png" />
     <Content Include="Images\vspostbuild.png" />
     <Content Include="Scripts\bootstrap.js" />
@@ -141,6 +146,7 @@
     <Content Include="..\LICENSE">
       <Link>LICENSE</Link>
     </Content>
+    <None Include="bundleconfig.json" />
     <None Include="Scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.4.js" />
     <Content Include="Scripts\jquery-2.2.4.min.js" />
@@ -157,7 +163,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Home\Setup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -208,6 +213,10 @@
   <Target Name="BeforeBuild">
   </Target> -->
   <Target Name="AfterBuild">
-    <Exec Command="&quot;C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\AWSDeploymentAssistant.exe&quot; build --source &quot;$(MSBuildProjectDirectory)&quot; --bucket &quot;useast-marksjac-code-repository&quot; --profile &quot;marksjac&quot; --zipname &quot;MyCodePackage.zip&quot;" Condition="'$(Configuration)'=='Deploy'" />
+    <Exec Command="&quot;C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\AWSDeploymentAssistant.exe&quot; build --source &quot;$(MSBuildProjectDirectory)&quot; --bucket &quot;useast-my-bucket&quot; --profile &quot;default&quot; --zipname &quot;MyCodePackage.zip&quot;" Condition="'$(Configuration)'=='Deploy'" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

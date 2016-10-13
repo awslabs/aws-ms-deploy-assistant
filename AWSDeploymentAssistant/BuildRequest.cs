@@ -58,7 +58,7 @@ namespace AWSDeploymentAssistant
             }
         }
 
-        [Option("source", Required = true, HelpText = "The path to the build output source files that will be packaged adn uploaded to s3. If using this tool in an MSBuild post build event, you this could be the $(TargetDir) environment variable.")]
+        [Option("source", Required = true, HelpText = "The path to the build output source files that will be packaged and uploaded to s3. If using this tool in an MSBuild post build event, you this could be the $(TargetDir) environment variable.")]
         public string SourcePath
         {
             get
@@ -98,7 +98,7 @@ namespace AWSDeploymentAssistant
             }
         }
 
-        [Option("region", Default = "us-east-1", HelpText = "The AWS resion where the S3 bucket is located. If using AWS CodePipeline, the bucket must be in the same region as the CodePipeline.")]
+        [Option("region", Default = "us-east-1", HelpText = "The AWS region where the S3 bucket is located. If using AWS CodePipeline, the bucket must be in the same region as the CodePipeline.")]
         public string S3BucketRegion
         {
             get
@@ -148,7 +148,7 @@ namespace AWSDeploymentAssistant
             }
         }
 
-        [Option(HelpText = "Use to perform dry run of process without completing actions. This will only impact a request that makes an external change, such as the S3 upload in a build reqeust.")]
+        [Option(HelpText = "Use to perform dry run of process without completing actions. This will only impact a request that makes an external change, such as the S3 upload in a build request.")]
         public bool WhatIf
         {
             get;

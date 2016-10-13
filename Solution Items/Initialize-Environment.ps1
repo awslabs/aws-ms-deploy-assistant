@@ -1,4 +1,4 @@
-function Initialize-DevEnvironment{
+function Initialize-Environment{
 	param(
 		[Parameter(Mandatory=$true)][string]$username
 	)
@@ -12,4 +12,4 @@ function Initialize-DevEnvironment{
 	Set-Acl "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant" $acl;
 }
 
-Initialize-DevEnvironment -username "<Domain\Account>"
+Initialize-Environment -username "<Domain\Account>"

@@ -11,13 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoSite", "DemoSite\DemoSi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Environment Setup", "Environment Setup", "{6846DB8E-81FA-4C7B-8E41-0A464FD20D9D}"
 	ProjectSection(SolutionItems) = preProject
-		Solution Items\Initialize-DevEnvironment.ps1 = Solution Items\Initialize-DevEnvironment.ps1
+		Solution Items\Initialize-Environment.ps1 = Solution Items\Initialize-Environment.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6DC82513-0AFB-4530-9752-F80BB78555ED}"
 	ProjectSection(SolutionItems) = preProject
 		CHANGELOG.md = CHANGELOG.md
 		CONTRIBUTING.md = CONTRIBUTING.md
+		Contributors.txt = Contributors.txt
 		ISSUE_TEMPLATE.md = ISSUE_TEMPLATE.md
 		LICENSE = LICENSE
 		License.bootstrap.txt = License.bootstrap.txt
