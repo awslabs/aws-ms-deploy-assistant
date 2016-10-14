@@ -4,32 +4,12 @@
 // accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied. See the License for the specific language governing permissions and limitations
 // under the License.
-using System.Collections.Generic;
 
 namespace AWSDeploymentAssistant
 {
     public class Request
     {
-        private IEnumerable<KeyValuePair<string, string>> _PluginOptions;
-
         internal Request()
         { }
-
-        public IEnumerable<KeyValuePair<string, string>> PluginOptions
-        {
-            get
-            {
-                if (this._PluginOptions == null)
-                {
-                    this._PluginOptions = new List<KeyValuePair<string, string>>();
-                }
-
-                return this._PluginOptions;
-            }
-            set
-            {
-                this._PluginOptions = value;
-            }
-        }
     }
 }

@@ -146,6 +146,7 @@
     <Content Include="..\LICENSE">
       <Link>LICENSE</Link>
     </Content>
+    <None Include="AWSCodeDeployPlugin.options.json" />
     <None Include="bundleconfig.json" />
     <None Include="Scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.4.js" />

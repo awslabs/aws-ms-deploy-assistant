@@ -175,6 +175,28 @@ namespace AWSDeploymentAssistant
                     try
                     {
                         Program.Logger.InfoFormat("Executing [{0}] plugin.", plugin.GetType().FullName);
+
+                        if (plugin.LoadOptions)
+                        {
+                            if (plugin.Options == null)
+                            {
+                                throw new TargetException();
+                            }
+
+                            string fileName = string.Format("{0}.options.json", plugin.Name);
+
+                            var optionsFile = this.TempContentDirectory.GetFiles(fileName, SearchOption.TopDirectoryOnly).SingleOrDefault();
+
+                            if (optionsFile != null)
+                            {
+                                var json = File.ReadAllText(optionsFile.FullName);
+
+                                var options = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+
+                                plugin.Options.AddRange(options);
+                            }
+                        }
+
                         plugin.Execute(this.Request, this.TempContentDirectory);
                     }
                     catch (Exception ex)
@@ -192,7 +214,7 @@ namespace AWSDeploymentAssistant
                     }
                     finally
                     {
-                        Program.Logger.InfoFormat("    Completed executing [{0}] plugin.", plugin.GetType().FullName);
+                        Program.Logger.InfoFormat("Completed executing [{0}] plugin.", plugin.GetType().FullName);
                     }
 
                     plugin.Dispose();
@@ -202,7 +224,7 @@ namespace AWSDeploymentAssistant
 
         private void ZipPackage()
         {
-            Assert.DirectoryExists(this.TempContentDirectory, "Unable to find request wokring directory.");
+            Assert.DirectoryExists(this.TempContentDirectory, "Unable to find request working directory.");
 
             string zipPath = Path.Combine(this.TempDirectory.FullName, this.Request.PackageZipName);
 

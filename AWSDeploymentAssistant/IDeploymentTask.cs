@@ -5,15 +5,22 @@
 // KIND, either express or implied. See the License for the specific language governing permissions and limitations
 // under the License.
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace AWSDeploymentAssistant
 {
     public interface IDeploymentTask : IDisposable
     {
+        string Name { get; }
+
         int Priority { get; }
 
         bool ThrowOnError { get; }
+
+        bool LoadOptions { get; }
+
+        Dictionary<string, string> Options { get; }
 
         void Execute(BuildRequest request, DirectoryInfo workingDirectory);
     }

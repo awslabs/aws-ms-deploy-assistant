@@ -4,6 +4,7 @@
 // accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied. See the License for the specific language governing permissions and limitations
 // under the License.
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -54,6 +55,16 @@ namespace AWSDeploymentAssistant
             }
 
             return values;
+        }
+
+        public static void AddRange<T>(this ICollection<T> target, IEnumerable<T> source)
+        {
+            if (target == null)
+                throw new ArgumentNullException("target");
+            if (source == null)
+                throw new ArgumentNullException("source");
+            foreach (var element in source)
+                target.Add(element);
         }
     }
 }

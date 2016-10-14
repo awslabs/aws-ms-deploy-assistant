@@ -9,6 +9,7 @@ using CodeDeployPlugin.Properties;
 using System;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace CodeDeployPlugin
 {
@@ -16,8 +17,12 @@ namespace CodeDeployPlugin
     {
         public static string[] OSOptions = new string[2] { "linux", "windows" };
 
+        private Dictionary<string, string> m_Options;
+
         public AWSCodeDeployAppSpecGenerator()
-        { }
+        {
+            this.m_Options = new Dictionary<string, string>();
+        }
 
         public int Priority
         {
@@ -32,6 +37,30 @@ namespace CodeDeployPlugin
             get
             {
                 return Settings.Default.ThrowOnError;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return "AWSCodeDeployPlugin";
+            }
+        }
+
+        public bool LoadOptions
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public Dictionary<string, string> Options
+        {
+            get
+            {
+                return this.m_Options;
             }
         }
 
@@ -84,33 +113,33 @@ namespace CodeDeployPlugin
 
         internal AppSpec BuildAppSpec(BuildRequest request, DirectoryInfo workingDirectory)
         {
-            var os = (from d in request.PluginOptions
+            var os = (from d in this.Options
                       where string.Equals(d.Key, "os", System.StringComparison.Ordinal)
                       select d.Value).SingleOrDefault() ?? "windows";
 
             Assert.IsWhitelistedValue(os, AWSCodeDeployAppSpecGenerator.OSOptions);
 
-            var destination = (from d in request.PluginOptions
+            var destination = (from d in this.Options
                                where string.Equals(d.Key, "destination", System.StringComparison.Ordinal)
                                select d.Value).SingleOrDefault() ?? "c:\\inetpub\\wwwroot";
 
-            var applicationStop = (from d in request.PluginOptions
+            var applicationStop = (from d in this.Options
                                    where string.Equals(d.Key, "applicationstop", System.StringComparison.Ordinal)
                                    select d.Value).SingleOrDefault();
 
-            var beforeInstall = (from d in request.PluginOptions
+            var beforeInstall = (from d in this.Options
                                  where string.Equals(d.Key, "beforeinstall", System.StringComparison.Ordinal)
                                  select d.Value).SingleOrDefault();
 
-            var afterInstall = (from d in request.PluginOptions
+            var afterInstall = (from d in this.Options
                                 where string.Equals(d.Key, "afterinstall", System.StringComparison.Ordinal)
                                 select d.Value).SingleOrDefault();
 
-            var applicationStart = (from d in request.PluginOptions
+            var applicationStart = (from d in this.Options
                                     where string.Equals(d.Key, "applicationstart", System.StringComparison.Ordinal)
                                     select d.Value).SingleOrDefault();
 
-            var validateService = (from d in request.PluginOptions
+            var validateService = (from d in this.Options
                                    where string.Equals(d.Key, "validateservice", System.StringComparison.Ordinal)
                                    select d.Value).SingleOrDefault();
 

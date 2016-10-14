@@ -28,6 +28,7 @@ namespace AWSDeploymentAssistant
         private const int ERROR_BAD_ARGUMENTS = 1;
         private const int ERROR_BUILD_REQUEST_FAILED = 2;
         private const int ERROR_PROFILE_REQUEST_FAILED = 3;
+        private const int ERROR = 4;
 
         static Program()
         {
@@ -43,15 +44,15 @@ namespace AWSDeploymentAssistant
 
         public static void ConfigureSettings(ParserSettings settings)
         {
-            settings.EnableDashDash = true;
+            settings.EnableDashDash = false;
             settings.CaseSensitive = false;
-            settings.IgnoreUnknownArguments = false;
+            settings.IgnoreUnknownArguments = true;
             settings.HelpWriter = Console.Out;
         }
 
         private static void Main(string[] args)
         {
-            int exitCode = Program.ERROR_BAD_ARGUMENTS;
+            int exitCode = Program.ERROR;
 
             XmlConfigurator.Configure();
 
@@ -78,25 +79,18 @@ namespace AWSDeploymentAssistant
                             {
                                 Type t = error.GetType();
 
-                                if (t.IsAssignableFrom(typeof(NoVerbSelectedError)))
-                                {
-                                    Program.Logger.Fatal(error.Tag);
-                                    exitCode = Program.ERROR_BAD_ARGUMENTS;
-                                }
-                                else if (t.IsAssignableFrom(typeof(BadFormatTokenError)) ||
-                                         t.IsAssignableFrom(typeof(BadVerbSelectedError)) ||
-                                         t.IsAssignableFrom(typeof(UnknownOptionError)))
-                                {
-                                    Program.Logger.Error(error.Tag);
-                                    exitCode = Program.ERROR_BAD_ARGUMENTS;
-                                }
-                                else if (t.IsAssignableFrom(typeof(HelpRequestedError)) |
-                                         t.IsAssignableFrom(typeof(HelpVerbRequestedError)))
+                                if (t.IsAssignableFrom(typeof(HelpRequestedError)) ||
+                                    t.IsAssignableFrom(typeof(HelpVerbRequestedError)) ||
+                                    t.IsAssignableFrom(typeof(VersionRequestedError)) ||
+                                    t.IsAssignableFrom(typeof(UnknownOptionError)))
                                 {
                                     // Do Nothing
                                     exitCode = Program.SUCCESS;
                                 }
-                                else if (t.IsAssignableFrom(typeof(MissingRequiredOptionError)) ||
+                                else if (t.IsAssignableFrom(typeof(NoVerbSelectedError)) ||
+                                         t.IsAssignableFrom(typeof(BadFormatTokenError)) ||
+                                         t.IsAssignableFrom(typeof(BadVerbSelectedError)) ||
+                                         t.IsAssignableFrom(typeof(MissingRequiredOptionError)) ||
                                          t.IsAssignableFrom(typeof(MissingValueOptionError)) ||
                                          t.IsAssignableFrom(typeof(MutuallyExclusiveSetError)) ||
                                          t.IsAssignableFrom(typeof(RepeatedOptionError)) ||
@@ -105,11 +99,6 @@ namespace AWSDeploymentAssistant
                                     Program.Logger.Error(error.Tag);
                                     exitCode = Program.ERROR_BAD_ARGUMENTS;
                                 }
-                                else if (t.IsAssignableFrom(typeof(VersionRequestedError)))
-                                {
-                                    // Do Nothing
-                                    exitCode = Program.SUCCESS;
-                                }
                             }
                         });
                 }
@@ -117,7 +106,7 @@ namespace AWSDeploymentAssistant
             catch (Exception ex)
             {
                 Program.Logger.Fatal("An error occurred while parsing command line arguments.", ex);
-                Environment.Exit(Program.ERROR_BAD_ARGUMENTS);
+                exitCode = Program.ERROR;
             }
             finally
             {
