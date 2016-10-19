@@ -144,9 +144,9 @@ namespace AWSDeploymentAssistant
 
         private void RunPlugins()
         {
-            DirectoryInfo taskDirectory = new DirectoryInfo(Program.TaskPluginFolderPath);
+            DirectoryInfo pluginDirectory = new DirectoryInfo(Program.TaskPluginFolderPath);
 
-            var assemblyFiles = taskDirectory.GetFiles("*.dll", SearchOption.AllDirectories);
+            var assemblyFiles = pluginDirectory.GetFiles("*.dll", SearchOption.AllDirectories);
 
             Program.Logger.InfoFormat("Found [{0}] plugin assemblies.", assemblyFiles.Count());
 

@@ -14,11 +14,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Linq;
 
 namespace AWSDeploymentAssistant
 {
     public class Program
     {
+        private static List<Assembly> _AssemblyCache;
+
         public const string LogFolderPath = "C:\\temp\\AWS Development Tools\\EC2 Deployment Assistant\\logs";
         public const string TempFolderPath = "C:\\temp\\AWS Development Tools\\EC2 Deployment Assistant\\temp";
 
@@ -32,6 +35,8 @@ namespace AWSDeploymentAssistant
 
         static Program()
         {
+            Program._AssemblyCache = new List<Assembly>();
+
             log4net.GlobalContext.Properties["LogPath"] = Program.LogFolderPath;
             Program.Logger = LogManager.GetLogger(Settings.Default.DefaultLoggerName);
 
@@ -58,6 +63,8 @@ namespace AWSDeploymentAssistant
 
             try
             {
+                AppDomain.CurrentDomain.AssemblyResolve += Program.CurrentDomain_AssemblyResolve;
+
                 if (Directory.Exists(Program.TempFolderPath) == false)
                 {
                     Directory.CreateDirectory(Program.TempFolderPath);
@@ -242,6 +249,38 @@ namespace AWSDeploymentAssistant
         public static AWSCredentials GetAWSCredentials(string profileName)
         {
             return Amazon.Util.ProfileManager.GetAWSCredentials(profileName);
+        }
+
+        private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            if (Program._AssemblyCache.Count == 0)
+            {
+                Assembly executingAssembly = Assembly.GetExecutingAssembly();
+
+                FileInfo executingFile = new FileInfo(executingAssembly.Location);
+
+                DirectoryInfo applicationPath = executingFile.Directory;
+
+                var assemblyFiles = applicationPath.GetFiles("*.dll", SearchOption.AllDirectories);
+
+                foreach (FileInfo assemblyFile in assemblyFiles)
+                {
+                    Assembly assembly = Assembly.LoadFile(assemblyFile.FullName);
+
+                    if (Program._AssemblyCache.Contains(assembly) == false)
+                    {
+                        Program._AssemblyCache.Add(assembly);
+                    }
+                }
+            }
+
+            string searchTarget = args.Name.Substring(0, args.Name.IndexOf(","));
+
+            Assembly result = (from a in Program._AssemblyCache
+                               where string.Equals(a.FullName.Substring(0, a.FullName.IndexOf(",")), searchTarget, StringComparison.Ordinal)
+                               select a).SingleOrDefault();
+
+            return result;
         }
     }
 }
