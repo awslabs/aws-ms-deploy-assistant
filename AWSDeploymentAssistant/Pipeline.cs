@@ -18,6 +18,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Web;
+using ZetaLongPaths;
 
 namespace AWSDeploymentAssistant
 {
@@ -49,11 +50,11 @@ namespace AWSDeploymentAssistant
             }
         }
 
-        internal DirectoryInfo TempContentDirectory
+        internal ZlpDirectoryInfo TempContentDirectory
         {
             get
             {
-                return new DirectoryInfo(Path.Combine(this.TempDirectory.FullName, "content"));
+                return new ZlpDirectoryInfo(Path.Combine(this.TempDirectory.FullName, "content"));
             }
         }
 
@@ -125,7 +126,7 @@ namespace AWSDeploymentAssistant
         {
             Assert.DirectoryExists(this.Request.SourcePath, "Unable to find request source directory path.");
 
-            string tempPath = Path.Combine(Program.TempFolderPath, this.Request.RequestId.ToString());
+            string tempPath = Path.Combine(Program.TempFolderPath, this.Request.RequestId.ToString("N").Substring(0, 10));
 
             this.TempDirectory = new DirectoryInfo(tempPath);
 
@@ -137,7 +138,7 @@ namespace AWSDeploymentAssistant
 
             this.TempContentDirectory.Create();
 
-            DirectoryInfo sourceDirectory = new DirectoryInfo(this.Request.SourcePath);
+            ZlpDirectoryInfo sourceDirectory = new ZlpDirectoryInfo(this.Request.SourcePath);
 
             FileSystemUtil.CopyDirectory(sourceDirectory, this.TempContentDirectory, true);
         }

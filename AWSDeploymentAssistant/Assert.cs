@@ -7,6 +7,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using ZetaLongPaths;
 
 namespace AWSDeploymentAssistant
 {
@@ -26,6 +27,14 @@ namespace AWSDeploymentAssistant
         public static void IsFalse(bool value, string message = "The value is expected to be false.")
         {
             if (value == true)
+            {
+                throw new ArgumentException(message);
+            }
+        }
+
+        internal static void IsShorterThan(string value, int max, string message = "The value is too long.")
+        {
+            if (value.Length > max)
             {
                 throw new ArgumentException(message);
             }
@@ -108,6 +117,12 @@ namespace AWSDeploymentAssistant
         {
             Assert.IsNotNull(directory, string.Format("{0} A directory must be provided.", message));
             Assert.DirectoryExists(directory.FullName, message);
+        }
+
+        public static void DirectoryExists(ZlpDirectoryInfo directory, string message = "The directory is expected to exist.")
+        {
+            Assert.IsNotNull(directory, string.Format("{0} A directory must be provided.", message));
+            Assert.IsTrue(directory.Exists, string.Format("{0} [{1}] not found.", message, directory.FullName));
         }
 
         public static void DirectoryDoesNotExist(DirectoryInfo directory, string message = "The directory is expected to not exist.")

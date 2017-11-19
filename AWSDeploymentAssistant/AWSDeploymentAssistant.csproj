@@ -60,25 +60,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>..\packages\AWSSDK.Core.3.3.1.1\lib\net45\AWSSDK.Core.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\AWSSDK.Core.3.3.19\lib\net45\AWSSDK.Core.dll</HintPath>
     </Reference>
     <Reference Include="AWSSDK.S3, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>..\packages\AWSSDK.S3.3.3.0.3\lib\net45\AWSSDK.S3.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\AWSSDK.S3.3.3.12.1\lib\net45\AWSSDK.S3.dll</HintPath>
     </Reference>
     <Reference Include="CommandLine, Version=2.0.275.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
       <HintPath>..\packages\CommandLineParser.2.0.275-beta\lib\net45\CommandLine.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -91,9 +86,11 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="YamlDotNet, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\YamlDotNet.4.0.0\lib\net35\YamlDotNet.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="YamlDotNet, Version=4.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.4.2.2\lib\net35\YamlDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="ZetaLongPaths, Version=1.0.0.20, Culture=neutral, PublicKeyToken=b764f59068f31f38, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZetaLongPaths.1.0.0.20\lib\net40-full\ZetaLongPaths.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -172,17 +169,17 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\AWSSDK.S3.3.3.0.3\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
+    <Analyzer Include="..\packages\AWSSDK.S3.3.3.12.1\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetDir)AWSDeploymentAssistant.exe" "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\AWSDeploymentAssistant.exe"
-copy "$(TargetDir)AWSDeploymentAssistant.exe.config" "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\AWSDeploymentAssistant.exe.config"
-xcopy "$(TargetDir)*.dll" "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\*.dll"  /y
-xcopy "$(TargetDir)*.txt" "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\*.txt"  /y
-xcopy "$(TargetDir)*.md" "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\*.md"  /y
-xcopy "$(TargetDir)plugins\*.dll" "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\plugins\*.dll"  /y
-xcopy "$(TargetDir)plugins\*.config" "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\plugins\*.config"  /y</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetDir)AWSDeploymentAssistant.exe" "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\AWSDeploymentAssistant.exe" /c
+copy "$(TargetDir)AWSDeploymentAssistant.exe.config" "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\AWSDeploymentAssistant.exe.config" /c
+xcopy "$(TargetDir)*.dll" "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\*.dll"  /y /c
+xcopy "$(TargetDir)*.txt" "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\*.txt"  /y /c
+xcopy "$(TargetDir)*.md" "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\*.md"  /y /c
+xcopy "$(TargetDir)plugins\*.dll" "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\plugins\*.dll"  /y /c
+xcopy "$(TargetDir)plugins\*.config" "C:\Program Files (x86)\AWS Tools\EC2 Deployment Assistant\plugins\*.config"  /y /c</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

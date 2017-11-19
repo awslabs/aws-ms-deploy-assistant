@@ -10,20 +10,21 @@ using System.Collections.Specialized;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using ZetaLongPaths;
 
 namespace AWSDeploymentAssistant
 {
     public static class Extensions
     {
-        public static void AddDirectory(this ZipArchive archive, DirectoryInfo directory, IEnumerable<string> whitelistedExtensions, IEnumerable<string> excludePatterns, bool recursive = true)
+        public static void AddDirectory(this ZipArchive archive, ZlpDirectoryInfo directory, IEnumerable<string> whitelistedExtensions, IEnumerable<string> excludePatterns, bool recursive = true)
         {
             Assert.IsNotNull(archive, "An archive must be provided.");
 
             SearchOption option = recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
-            FileInfo[] files = directory.GetFiles("*", option);
+            ZlpFileInfo[] files = directory.GetFiles("*", option);
 
-            foreach (FileInfo file in files)
+            foreach (ZlpFileInfo file in files)
             {
                 if (whitelistedExtensions.Contains(file.Extension))
                 {

@@ -5,25 +5,24 @@
 // KIND, either express or implied. See the License for the specific language governing permissions and limitations
 // under the License.
 using System.IO;
+using ZetaLongPaths;
 
 namespace AWSDeploymentAssistant
 {
     public static class FileSystemUtil
     {
-        internal static void CopyDirectory(DirectoryInfo source, DirectoryInfo destination, bool copySubDirs)
+        internal static void CopyDirectory(ZlpDirectoryInfo source, ZlpDirectoryInfo destination, bool copySubDirs)
         {
-            //https://msdn.microsoft.com/en-us/library/bb762914(v=vs.110).aspx
-
             Assert.DirectoryExists(source);
 
-            if (!Directory.Exists(destination.FullName))
+            if (destination.Exists == false)
             {
                 destination.Create();
             }
 
-            FileInfo[] sourceFiles = source.GetFiles();
+            ZlpFileInfo[] sourceFiles = source.GetFiles();
 
-            foreach (FileInfo sourceFile in sourceFiles)
+            foreach (ZlpFileInfo sourceFile in sourceFiles)
             {
                 string destinationFilePath = Path.Combine(destination.FullName, sourceFile.Name);
 
@@ -32,13 +31,13 @@ namespace AWSDeploymentAssistant
 
             if (copySubDirs)
             {
-                DirectoryInfo[] sourceDirectories = source.GetDirectories();
+                ZlpDirectoryInfo[] sourceDirectories = source.GetDirectories();
 
-                foreach (DirectoryInfo sourceDirectory in sourceDirectories)
+                foreach (ZlpDirectoryInfo sourceDirectory in sourceDirectories)
                 {
                     string destinationDirectoryPath = Path.Combine(destination.FullName, sourceDirectory.Name);
 
-                    DirectoryInfo destinationDirectory = new DirectoryInfo(destinationDirectoryPath);
+                    ZlpDirectoryInfo destinationDirectory = new ZlpDirectoryInfo(destinationDirectoryPath);
 
                     FileSystemUtil.CopyDirectory(sourceDirectory, destinationDirectory, copySubDirs);
                 }

@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using ZetaLongPaths;
 
 namespace CodeDeployPlugin
 {
@@ -64,12 +65,12 @@ namespace CodeDeployPlugin
             }
         }
 
-        public void Execute(BuildRequest request, DirectoryInfo workingDirectory)
+        public void Execute(BuildRequest request, ZlpDirectoryInfo workingDirectory)
         {
             // https://docs.aws.amazon.com/codedeploy/latest/userguide/writing-app-spec.html
             try
             {
-                FileInfo appSpecFile = (from f in workingDirectory.GetFiles("appspec.yml", SearchOption.TopDirectoryOnly)
+                ZlpFileInfo appSpecFile = (from f in workingDirectory.GetFiles("appspec.yml", SearchOption.TopDirectoryOnly)
                                         select f).SingleOrDefault();
 
                 if (appSpecFile == null)
@@ -78,11 +79,11 @@ namespace CodeDeployPlugin
 
                     string appSpecFilePath = Path.Combine(workingDirectory.FullName, "appspec.yml");
 
-                    appSpecFile = new FileInfo(appSpecFilePath);
+                    appSpecFile = new ZlpFileInfo(appSpecFilePath);
 
                     AppSpec appSpec = this.BuildAppSpec(request, workingDirectory);
 
-                    using (FileStream stream = appSpecFile.Create())
+                    using (FileStream stream = appSpecFile.OpenCreate())
                     {
                         using (StreamWriter sWriter = new StreamWriter(stream))
                         {
@@ -111,7 +112,7 @@ namespace CodeDeployPlugin
             }
         }
 
-        internal AppSpec BuildAppSpec(BuildRequest request, DirectoryInfo workingDirectory)
+        internal AppSpec BuildAppSpec(BuildRequest request, ZlpDirectoryInfo workingDirectory)
         {
             var os = (from d in this.Options
                       where string.Equals(d.Key, "os", System.StringComparison.Ordinal)
