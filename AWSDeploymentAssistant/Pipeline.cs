@@ -33,27 +33,22 @@ namespace AWSDeploymentAssistant
 
         internal BuildRequest Request
         {
-            get
-            {
+            get {
                 return this._Request;
             }
-            private set
-            {
+            private set {
                 Assert.IsNotNull(value);
 
-                Assert.StringDoesNotEqual(value.AWSCredentialProfile, Program.DefaultArgumentValue, StringComparison.OrdinalIgnoreCase, "Invalid credential profile value.");
-                Assert.StringDoesNotEqual(value.PackageZipName, Program.DefaultArgumentValue, StringComparison.OrdinalIgnoreCase, "Invalid package zip file name value.");
-                Assert.StringDoesNotEqual(value.S3BucketName, Program.DefaultArgumentValue, StringComparison.OrdinalIgnoreCase, "Invalid S3 bucket name value.");
-                Assert.StringDoesNotEqual(value.S3BucketRegion, Program.DefaultArgumentValue, StringComparison.OrdinalIgnoreCase, "Invalid S3 bucket region value.");
-                Assert.StringDoesNotEqual(value.SourcePath, Program.DefaultArgumentValue, StringComparison.OrdinalIgnoreCase, "Invalid request source directory path value.");
+                Assert.StringDoesNotEqual(value.PackageZipName, Program.DefaultRequestValue, StringComparison.OrdinalIgnoreCase, "Invalid package zip file name value.");
+                Assert.StringDoesNotEqual(value.S3BucketName, Program.DefaultRequestValue, StringComparison.OrdinalIgnoreCase, "Invalid S3 bucket name value.");
+                Assert.StringDoesNotEqual(value.SourcePath, Program.DefaultRequestValue, StringComparison.OrdinalIgnoreCase, "Invalid request source directory path value.");
                 this._Request = value;
             }
         }
 
         internal ZlpDirectoryInfo TempContentDirectory
         {
-            get
-            {
+            get {
                 return new ZlpDirectoryInfo(Path.Combine(this.TempDirectory.FullName, "content"));
             }
         }
@@ -68,8 +63,7 @@ namespace AWSDeploymentAssistant
 
             Program.Logger.Info("Starting deployment pipeline.");
 
-            try
-            {
+            try {
                 Program.Logger.Info("Creating working directory for request.");
                 this.PopulateRequestWorkingDirectory();
                 Program.Logger.Info("    Completed creating working directory for request.");
@@ -88,30 +82,25 @@ namespace AWSDeploymentAssistant
 
                 result = true;
             }
-            finally
-            {
+            finally {
                 Program.Logger.Info("Serializing request object, temp directory object, temp content directory object and output file object.");
                 Program.Logger.Info(JsonConvert.SerializeObject(this.Request));
                 Program.Logger.Info(JsonConvert.SerializeObject(this.TempDirectory));
-                Program.Logger.Info(JsonConvert.SerializeObject(this.TempContentDirectory));
-                Program.Logger.Info(JsonConvert.SerializeObject(this.OutputFile));
+                Program.Logger.Info(JsonConvert.SerializeObject((from f in this.TempContentDirectory.GetFileSystemInfos(SearchOption.AllDirectories)
+                                                                 select f.FullName)));
+                Program.Logger.Info(JsonConvert.SerializeObject(this.OutputFile.FullName));
 
-                if (this.Request.WhatIf)
-                {
+                if (this.Request.WhatIf) {
                     Program.Logger.Info("The current request is a whatif request. The request working directory was not cleaned to enable review.");
                 }
-                else
-                {
-                    try
-                    {
-                        if ((this.TempDirectory != null) && Directory.Exists(this.TempDirectory.FullName))
-                        {
+                else {
+                    try {
+                        if ((this.TempDirectory != null) && Directory.Exists(this.TempDirectory.FullName)) {
                             this.TempDirectory.Delete(true);
                             Program.Logger.Info("Cleaning-up request working directory.");
                         }
                     }
-                    catch (Exception ex)
-                    {
+                    catch (Exception ex) {
                         Program.Logger.Error("Failed to delete temporary directory.", ex);
                     }
                 }
@@ -126,7 +115,7 @@ namespace AWSDeploymentAssistant
         {
             Assert.DirectoryExists(this.Request.SourcePath, "Unable to find request source directory path.");
 
-            string tempPath = Path.Combine(Program.TempFolderPath, this.Request.RequestId.ToString("N").Substring(0, 10));
+            string tempPath = Path.Combine(Settings.Default.TempFolderPath, this.Request.RequestId.ToString("N").Substring(0, 10));
 
             this.TempDirectory = new DirectoryInfo(tempPath);
 
@@ -151,8 +140,7 @@ namespace AWSDeploymentAssistant
 
             Program.Logger.InfoFormat("Found [{0}] plugin assemblies.", assemblyFiles.Count());
 
-            foreach (var assemblyFile in assemblyFiles)
-            {
+            foreach (var assemblyFile in assemblyFiles) {
                 var assembly = Assembly.LoadFile(assemblyFile.FullName);
 
                 var pluginTypes = (from type in assembly.GetTypes()
@@ -163,24 +151,18 @@ namespace AWSDeploymentAssistant
 
                 List<IDeploymentTask> plugins = new List<IDeploymentTask>();
 
-                foreach (var pluginType in pluginTypes)
-                {
-                    using (var plugin = (IDeploymentTask)(Activator.CreateInstance(pluginType.Assembly.FullName, pluginType.FullName).Unwrap()))
-                    {
+                foreach (var pluginType in pluginTypes) {
+                    using (var plugin = (IDeploymentTask)(Activator.CreateInstance(pluginType.Assembly.FullName, pluginType.FullName).Unwrap())) {
                         plugins.Add(plugin);
                     }
                 }
 
-                foreach (var plugin in plugins.OrderBy(p => p.Priority))
-                {
-                    try
-                    {
+                foreach (var plugin in plugins.OrderBy(p => p.Priority)) {
+                    try {
                         Program.Logger.InfoFormat("Executing [{0}] plugin.", plugin.GetType().FullName);
 
-                        if (plugin.LoadOptions)
-                        {
-                            if (plugin.Options == null)
-                            {
+                        if (plugin.LoadOptions) {
+                            if (plugin.Options == null) {
                                 throw new TargetException();
                             }
 
@@ -188,8 +170,7 @@ namespace AWSDeploymentAssistant
 
                             var optionsFile = this.TempContentDirectory.GetFiles(fileName, SearchOption.TopDirectoryOnly).SingleOrDefault();
 
-                            if (optionsFile != null)
-                            {
+                            if (optionsFile != null) {
                                 var json = File.ReadAllText(optionsFile.FullName);
 
                                 var options = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
@@ -200,21 +181,17 @@ namespace AWSDeploymentAssistant
 
                         plugin.Execute(this.Request, this.TempContentDirectory);
                     }
-                    catch (Exception ex)
-                    {
+                    catch (Exception ex) {
                         var message = string.Format("Failed to execute [{0}] plugin.", plugin.GetType().FullName);
 
-                        if (plugin.ThrowOnError)
-                        {
+                        if (plugin.ThrowOnError) {
                             throw new InvalidOperationException(message, ex);
                         }
-                        else
-                        {
+                        else {
                             Program.Logger.Error(message, ex);
                         }
                     }
-                    finally
-                    {
+                    finally {
                         Program.Logger.InfoFormat("Completed executing [{0}] plugin.", plugin.GetType().FullName);
                     }
 
@@ -233,10 +210,8 @@ namespace AWSDeploymentAssistant
 
             Assert.FileDoesNotExist(this.OutputFile, "The package zip file already exists.");
 
-            using (var fileStream = new FileStream(this.OutputFile.FullName, FileMode.CreateNew))
-            {
-                using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Create, true))
-                {
+            using (var fileStream = new FileStream(this.OutputFile.FullName, FileMode.CreateNew)) {
+                using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Create, true)) {
                     var include = Settings.Default.PublishFileTypesIncludePattern.ToArray();
                     var exclude = Settings.Default.PublishFileTypesExcludePattern.ToArray();
 
@@ -254,21 +229,34 @@ namespace AWSDeploymentAssistant
 
             byte[] hash = null;
 
-            using (FileStream stream = this.OutputFile.Open(FileMode.Open, FileAccess.Read))
-            {
+            using (FileStream stream = this.OutputFile.Open(FileMode.Open, FileAccess.Read)) {
                 hash = hasher.ComputeHash(stream);
             }
 
             Assert.FileIsNotLocked(this.OutputFile, "The package zip file must be unlocked so that they S3 SDK can access and upload.");
 
-            AWSCredentials credentials = Program.GetAWSCredentials(this.Request.AWSCredentialProfile);
+            AWSCredentials credentials;
 
-            RegionEndpoint endpoint = RegionEndpoint.GetBySystemName(this.Request.S3BucketRegion);
+            if (!string.IsNullOrEmpty(this.Request.AWSCredentialProfile)) {
+                credentials = Program.GetAWSCredentials(this.Request.AWSCredentialProfile);
+            }
+            else {
+                Amazon.Runtime.AppConfigAWSCredentials appConfig = new Amazon.Runtime.AppConfigAWSCredentials();
 
-            using (AmazonS3Client client = new AmazonS3Client(credentials, endpoint))
-            {
-                PutObjectRequest request = new PutObjectRequest()
-                {
+                var appConfigCreds = appConfig.GetCredentials();
+
+                if ((appConfigCreds != null) && !string.IsNullOrEmpty(appConfigCreds.AccessKey) && !string.IsNullOrEmpty(appConfigCreds.SecretKey)) {
+                    credentials = new BasicAWSCredentials(appConfigCreds.AccessKey, appConfigCreds.SecretKey);
+                }
+                else {
+                    credentials = Program.GetAWSCredentials(Settings.Default.DefaultProfileName);
+                }
+            }
+
+            RegionEndpoint endpoint = RegionEndpoint.GetBySystemName(this.Request.Region);
+
+            using (AmazonS3Client client = new AmazonS3Client(credentials, endpoint)) {
+                PutObjectRequest request = new PutObjectRequest() {
                     BucketName = this.Request.S3BucketName,
                     FilePath = this.OutputFile.FullName,
                     CannedACL = S3CannedACL.BucketOwnerFullControl,
@@ -276,12 +264,10 @@ namespace AWSDeploymentAssistant
                     MD5Digest = Convert.ToBase64String(hash)
                 };
 
-                if (this.Request.WhatIf == false)
-                {
+                if (this.Request.WhatIf == false) {
                     PutObjectResponse putResponse = client.PutObject(request);
 
-                    if (putResponse.HttpStatusCode != System.Net.HttpStatusCode.OK)
-                    {
+                    if (putResponse.HttpStatusCode != System.Net.HttpStatusCode.OK) {
                         throw new HttpException(int.Parse(putResponse.HttpStatusCode.ToString()), "Failed to upload package to S3.");
                     }
                 }

@@ -19,33 +19,34 @@ namespace AWSDeploymentAssistant
         private Guid _RequestId;
         private string _SourcePath;
         private string _S3BucketName;
-        private RegionEndpoint _S3BucketRegion;
         private string _AWSCredentialProfile;
         private string _PackageZipName;
 
-        public BuildRequest()
+        public BuildRequest(string bucketRegion = "us-east-1")
+            : base(bucketRegion)
         {
             this._RequestId = Guid.NewGuid();
         }
 
         public BuildRequest(string sourcePath, string bucketName, string bucketRegion, string awsCredentialProfile, string packageZipName)
-            : this()
+            : this(bucketRegion)
         {
             this.SourcePath = sourcePath;
             this.S3BucketName = bucketName;
-            this.S3BucketRegion = bucketRegion;
+            this.Region = bucketRegion;
             this.AWSCredentialProfile = awsCredentialProfile;
             this.PackageZipName = packageZipName;
         }
 
         protected BuildRequest(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
             Assert.IsNotNull(info);
 
             this._RequestId = Guid.Parse(info.GetString("RequestId"));
             this._SourcePath = info.GetString("SourcePath");
             this._S3BucketName = info.GetString("S3BucketName");
-            this._S3BucketRegion = RegionEndpoint.GetBySystemName(info.GetString("S3BucketRegion"));
+            base._Region = RegionEndpoint.GetBySystemName(info.GetString("Region"));
             this._AWSCredentialProfile = info.GetString("AWSCredentialProfile");
             this._PackageZipName = info.GetString("PackageZipName");
         }
@@ -96,28 +97,9 @@ namespace AWSDeploymentAssistant
 
                 this._S3BucketName = value;
             }
-        }
+        }        
 
-        [Option("region", Default = "us-east-1", HelpText = "The AWS region where the S3 bucket is located. If using AWS CodePipeline, the bucket must be in the same region as the CodePipeline.")]
-        public string S3BucketRegion
-        {
-            get
-            {
-                if (this._S3BucketRegion == null)
-                {
-                    this._S3BucketRegion = RegionEndpoint.USEast1;
-                }
-                return this._S3BucketRegion.SystemName;
-            }
-            set
-            {
-                Assert.IsNotNullOrEmptyString(value);
-
-                this._S3BucketRegion = RegionEndpoint.GetBySystemName(value);
-            }
-        }
-
-        [Option("profile", Required = true, HelpText = "The name of the AWS stored credential profile that will be used to authenticate the S3 upload request. This profile must contain credentials for an IAM user that has S3 PutObject permission. No other permissions are required.")]
+        [Option("profile", Required = false, HelpText = "The name of the AWS stored credential profile that will be used to authenticate the S3 upload request. This profile must contain credentials for an IAM user that has S3 PutObject permission. No other permissions are required.")]
         public string AWSCredentialProfile
         {
             get
@@ -126,7 +108,6 @@ namespace AWSDeploymentAssistant
             }
             set
             {
-                Assert.IsNotNullOrEmptyString(value);
 
                 this._AWSCredentialProfile = value;
             }
@@ -155,12 +136,13 @@ namespace AWSDeploymentAssistant
             set;
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public new void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            base.GetObjectData(info, context);
+
             info.AddValue("RequestId", this._RequestId.ToString());
             info.AddValue("SourcePath", this._SourcePath);
             info.AddValue("S3BucketName", this._S3BucketName);
-            info.AddValue("S3BucketRegion", this._S3BucketRegion.SystemName);
             info.AddValue("AWSCredentialProfile", this._AWSCredentialProfile);
             info.AddValue("PackageZipName", this._PackageZipName);
         }
@@ -170,9 +152,9 @@ namespace AWSDeploymentAssistant
         {
             get
             {
-                yield return new Example("Normal Request", new BuildRequest { SourcePath = "$(TargetDir)", S3BucketName = "MyBucket", S3BucketRegion = "us-west-1", AWSCredentialProfile = "MyProfile", PackageZipName = "MyCodePackage.zip" });
-                yield return new Example("Normal Request With Default Region (us-east-1) Note: Region attribute is optional.", new BuildRequest { SourcePath = "$(TargetDir)", S3BucketName = "MyBucket", AWSCredentialProfile = "MyProfile", PackageZipName = "MyCodePackage.zip" });
-                yield return new Example("What If Request", new BuildRequest { SourcePath = "$(TargetDir)", S3BucketName = "MyBucket", S3BucketRegion = "us-west-2", AWSCredentialProfile = "MyProfile", PackageZipName = "MyCodePackage.zip", WhatIf = true });
+                yield return new Example("Normal Request", new BuildRequest("us-west-2") { SourcePath = "$(TargetDir)", S3BucketName = "MyBucket", AWSCredentialProfile = "MyProfile", PackageZipName = "MyCodePackage.zip" });
+                yield return new Example("Normal Request With Default Region (us-east-1) Note: Region attribute is optional.", new BuildRequest() { SourcePath = "$(TargetDir)", S3BucketName = "MyBucket", AWSCredentialProfile = "MyProfile", PackageZipName = "MyCodePackage.zip" });
+                yield return new Example("What If Request", new BuildRequest("us-east-2") { SourcePath = "$(TargetDir)", S3BucketName = "MyBucket", AWSCredentialProfile = "MyProfile", PackageZipName = "MyCodePackage.zip", WhatIf = true });
             }
         }
     }

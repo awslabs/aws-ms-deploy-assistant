@@ -5,7 +5,6 @@
 // KIND, either express or implied. See the License for the specific language governing permissions and limitations
 // under the License.
 using Amazon.Runtime;
-using Amazon.Util;
 using AWSDeploymentAssistant.Properties;
 using CommandLine;
 using log4net;
@@ -15,6 +14,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Linq;
+using Amazon.Runtime.CredentialManagement;
+using Amazon;
 
 namespace AWSDeploymentAssistant
 {
@@ -22,22 +23,27 @@ namespace AWSDeploymentAssistant
     {
         private static List<Assembly> _AssemblyCache;
 
-        public const string LogFolderPath = "C:\\temp\\AWS Development Tools\\EC2 Deployment Assistant\\logs";
-        public const string TempFolderPath = "C:\\temp\\AWS Development Tools\\EC2 Deployment Assistant\\temp";
-
-        internal const string DefaultArgumentValue = "foo-bar";
+        internal const string DefaultRequestValue = "foo";
 
         private const int SUCCESS = 0;
-        private const int ERROR_BAD_ARGUMENTS = 1;
-        private const int ERROR_BUILD_REQUEST_FAILED = 2;
-        private const int ERROR_PROFILE_REQUEST_FAILED = 3;
-        private const int ERROR = 4;
+        private const int ERROR_BAD_ARGUMENTS = 100;
+        private const int ERROR_BUILD_REQUEST_FAILED = 200;
+        private const int ERROR_PROFILE_REQUEST_FAILED = 300;
+        private const int ERROR = 400;
 
         static Program()
         {
             Program._AssemblyCache = new List<Assembly>();
 
-            log4net.GlobalContext.Properties["LogPath"] = Program.LogFolderPath;
+            if (!Directory.Exists(Settings.Default.LogFolderPath)) {
+                Directory.CreateDirectory(Settings.Default.LogFolderPath);
+            }
+
+            if (!Directory.Exists(Settings.Default.TempFolderPath)) {
+                Directory.CreateDirectory(Settings.Default.TempFolderPath);
+            }
+
+            log4net.GlobalContext.Properties["LogPath"] = Settings.Default.LogFolderPath;
             Program.Logger = LogManager.GetLogger(Settings.Default.DefaultLoggerName);
 
             {
@@ -61,36 +67,29 @@ namespace AWSDeploymentAssistant
 
             XmlConfigurator.Configure();
 
-            try
-            {
+            try {
                 AppDomain.CurrentDomain.AssemblyResolve += Program.CurrentDomain_AssemblyResolve;
 
-                if (Directory.Exists(Program.TempFolderPath) == false)
-                {
-                    Directory.CreateDirectory(Program.TempFolderPath);
+                if (Directory.Exists(Settings.Default.TempFolderPath) == false) {
+                    Directory.CreateDirectory(Settings.Default.TempFolderPath);
                 }
 
-                if (Directory.Exists(Program.LogFolderPath) == false)
-                {
-                    Directory.CreateDirectory(Program.LogFolderPath);
+                if (Directory.Exists(Settings.Default.LogFolderPath) == false) {
+                    Directory.CreateDirectory(Settings.Default.LogFolderPath);
                 }
 
-                using (CommandLine.Parser parser = new Parser(settings => Program.ConfigureSettings(settings)))
-                {
+                using (CommandLine.Parser parser = new Parser(settings => Program.ConfigureSettings(settings))) {
                     var result = parser.ParseArguments<ProfileRequest, BuildRequest>(args)
-                        .WithParsed<ProfileRequest>(request => exitCode = RunProfileRequest(request))
-                        .WithParsed<BuildRequest>(request => exitCode = RunBuildReqeust(request))
-                        .WithNotParsed(errors =>
-                        {
-                            foreach (Error error in errors)
-                            {
+                        .WithParsed<ProfileRequest>(request => exitCode = Program.RunProfileRequest(request))
+                        .WithParsed<BuildRequest>(request => exitCode = Program.RunBuildReqeust(request))
+                        .WithNotParsed(errors => {
+                            foreach (Error error in errors) {
                                 Type t = error.GetType();
 
                                 if (t.IsAssignableFrom(typeof(HelpRequestedError)) ||
                                     t.IsAssignableFrom(typeof(HelpVerbRequestedError)) ||
                                     t.IsAssignableFrom(typeof(VersionRequestedError)) ||
-                                    t.IsAssignableFrom(typeof(UnknownOptionError)))
-                                {
+                                    t.IsAssignableFrom(typeof(UnknownOptionError))) {
                                     // Do Nothing
                                     exitCode = Program.SUCCESS;
                                 }
@@ -101,8 +100,7 @@ namespace AWSDeploymentAssistant
                                          t.IsAssignableFrom(typeof(MissingValueOptionError)) ||
                                          t.IsAssignableFrom(typeof(MutuallyExclusiveSetError)) ||
                                          t.IsAssignableFrom(typeof(RepeatedOptionError)) ||
-                                         t.IsAssignableFrom(typeof(SequenceOutOfRangeError)))
-                                {
+                                         t.IsAssignableFrom(typeof(SequenceOutOfRangeError))) {
                                     Program.Logger.Error(error.Tag);
                                     exitCode = Program.ERROR_BAD_ARGUMENTS;
                                 }
@@ -110,14 +108,12 @@ namespace AWSDeploymentAssistant
                         });
                 }
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 Program.Logger.Fatal("An error occurred while parsing command line arguments.", ex);
                 exitCode = Program.ERROR;
             }
-            finally
-            {
-                Environment.Exit(exitCode);
+            finally {
+                Environment.ExitCode = exitCode;
             }
         }
 
@@ -125,38 +121,30 @@ namespace AWSDeploymentAssistant
         {
             int result = Program.ERROR_PROFILE_REQUEST_FAILED;
 
-            try
-            {
-                switch (request.Action)
-                {
-                    case ProfileRequestAction.GetCredential:
-                        {
+            try {
+                switch (request.Action) {
+                    case ProfileRequestAction.GetCredential: {
                             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(request.Credential));
                             break;
                         }
                     case ProfileRequestAction.GetProfile:
-                    case ProfileRequestAction.Register:
-                        {
+                    case ProfileRequestAction.Register: {
                             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(request.Profile));
                             break;
                         }
-                    case ProfileRequestAction.IsKnown:
-                        {
+                    case ProfileRequestAction.IsKnown: {
                             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(request.Known));
                             break;
                         }
-                    case ProfileRequestAction.List:
-                        {
+                    case ProfileRequestAction.List: {
                             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(request.AllLocalProfiles));
                             break;
                         }
-                    case ProfileRequestAction.Unregister:
-                        {
+                    case ProfileRequestAction.Unregister: {
                             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(request.Unregistered));
                             break;
                         }
-                    default:
-                        {
+                    default: {
                             throw new NotSupportedException("The specified profile request action type is not supported.");
                         }
                 }
@@ -166,8 +154,7 @@ namespace AWSDeploymentAssistant
                 Console.WriteLine("Press any key to continue.");
                 Console.ReadLine();
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 Program.Logger.Fatal("An error occurred while running profile request.", ex);
             }
 
@@ -178,17 +165,14 @@ namespace AWSDeploymentAssistant
         {
             int result = Program.ERROR_BUILD_REQUEST_FAILED;
 
-            try
-            {
+            try {
                 Pipeline pipeline = new Pipeline(request);
 
-                if (pipeline.Run())
-                {
+                if (pipeline.Run()) {
                     result = Program.SUCCESS;
                 }
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 Program.Logger.Fatal("An error occurred while running pipeline.", ex);
             }
 
@@ -209,8 +193,7 @@ namespace AWSDeploymentAssistant
 
         internal static string AssemblyPath
         {
-            get
-            {
+            get {
                 Assembly a = Assembly.GetExecutingAssembly();
 
                 string fullPath = a.Location;
@@ -221,40 +204,81 @@ namespace AWSDeploymentAssistant
             }
         }
 
-        internal static void RegisterAWSCredentialProfile(string profileName, string accessKey, string secretKey)
+        internal static SharedCredentialsFile GetCredentialStore()
         {
-            Amazon.Util.ProfileManager.RegisterProfile(profileName, accessKey, secretKey);
+
+            var path = AWSConfigs.AWSProfilesLocation;
+
+            if (string.IsNullOrEmpty(path)) {
+                path = SharedCredentialsFile.DefaultFilePath;
+            }
+
+            var file = new Amazon.Runtime.CredentialManagement.SharedCredentialsFile(path);
+
+            return file;
+        }
+
+        internal static void RegisterAWSCredentialProfile(string profileName, string accessKey, string secretKey, string region)
+        {
+            var options = new CredentialProfileOptions {
+                AccessKey = accessKey,
+                SecretKey = secretKey
+            };
+
+            var profile = new Amazon.Runtime.CredentialManagement.CredentialProfile(profileName, options);
+
+            var file = Program.GetCredentialStore();
+            file.RegisterProfile(profile);
         }
 
         internal static void UnregisterAWSCredentialProfile(string profileName)
         {
-            Amazon.Util.ProfileManager.UnregisterProfile(profileName);
+            var file = Program.GetCredentialStore();
+            file.UnregisterProfile(profileName);
         }
 
-        internal static IEnumerable<ProfileSettingsBase> ListAWSCredentialProfiles()
+        internal static IEnumerable<CredentialProfile> ListAWSCredentialProfiles()
         {
-            return Amazon.Util.ProfileManager.ListProfiles();
+            var file = Program.GetCredentialStore();
+            return file.ListProfiles();
         }
 
         public static bool IsAWSCredentialProfileKnown(string profileName)
         {
-            return Amazon.Util.ProfileManager.IsProfileKnown(profileName);
+            return (Program.GetAWSCredentialProfile(profileName) != null);
         }
 
-        internal static ProfileSettingsBase GetAWSCredentialProfile(string profileName)
+        internal static CredentialProfile GetAWSCredentialProfile(string profileName)
         {
-            return Amazon.Util.ProfileManager.GetProfile(profileName);
+            var file = Program.GetCredentialStore();
+
+            CredentialProfile profile;
+            file.TryGetProfile(profileName, out profile);
+
+            return profile;
         }
 
         public static AWSCredentials GetAWSCredentials(string profileName)
         {
-            return Amazon.Util.ProfileManager.GetAWSCredentials(profileName);
+            AWSCredentials credendial = null;
+
+            var file = Program.GetCredentialStore();
+
+            CredentialProfile profile;
+            file.TryGetProfile(profileName, out profile);
+
+            if (profile != null) {
+                credendial = profile.GetAWSCredentials(file);
+            }
+
+            Program.Logger.Debug(string.Format("Request for profile [{0}] returned [{1}]", profileName, profile));
+
+            return credendial;
         }
 
         private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            if (Program._AssemblyCache.Count == 0)
-            {
+            if (Program._AssemblyCache.Count == 0) {
                 Assembly executingAssembly = Assembly.GetExecutingAssembly();
 
                 FileInfo executingFile = new FileInfo(executingAssembly.Location);
@@ -263,12 +287,10 @@ namespace AWSDeploymentAssistant
 
                 var assemblyFiles = applicationPath.GetFiles("*.dll", SearchOption.AllDirectories);
 
-                foreach (FileInfo assemblyFile in assemblyFiles)
-                {
+                foreach (FileInfo assemblyFile in assemblyFiles) {
                     Assembly assembly = Assembly.LoadFile(assemblyFile.FullName);
 
-                    if (Program._AssemblyCache.Contains(assembly) == false)
-                    {
+                    if (Program._AssemblyCache.Contains(assembly) == false) {
                         Program._AssemblyCache.Add(assembly);
                     }
                 }

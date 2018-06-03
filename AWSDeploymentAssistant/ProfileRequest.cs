@@ -5,7 +5,7 @@
 // KIND, either express or implied. See the License for the specific language governing permissions and limitations
 // under the License.
 using Amazon.Runtime;
-using Amazon.Util;
+using Amazon.Runtime.CredentialManagement;
 using CommandLine;
 using CommandLine.Text;
 using System.Collections.Generic;
@@ -25,60 +25,51 @@ namespace AWSDeploymentAssistant
         [Option('a', "action", Default = ProfileRequestAction.None, Required = true, HelpText = "A profile request action. Options: (List, GetProfile, IsKnown, Register, Unregister) - values are case sensitive.")]
         public ProfileRequestAction Action { get; set; }
 
-        [Option('n', "name", Default = Program.DefaultArgumentValue, HelpText = "Required for GetProfile, IsKonwn, RegisterProfile and UnregisterProfile Actions. A profile name.")]
+        [Option('n', "name", HelpText = "Required for GetProfile, IsKonwn, RegisterProfile and UnregisterProfile Actions. A profile name.")]
         public string ProfileName
         {
-            get
-            {
+            get {
                 return this._ProfileName;
             }
-            set
-            {
+            set {
                 Assert.IsNotNullOrEmptyString(value);
 
                 this._ProfileName = value;
             }
         }
 
-        [Option("accesskey", Default = Program.DefaultArgumentValue, HelpText = "Required Only for RegisterProfile Action. An AWS IAM user access key.")]
+        [Option("accesskey", Default = Program.DefaultRequestValue, HelpText = "Required Only for RegisterProfile Action. An AWS IAM user access key.")]
         public string AccessKey
         {
-            get
-            {
+            get {
                 return this._AccessKey;
             }
-            set
-            {
+            set {
                 Assert.IsNotNullOrEmptyString(value);
 
                 this._AccessKey = value;
             }
         }
 
-        [Option("secretkey", Default = Program.DefaultArgumentValue, HelpText = "Required Only for RegisterProfile Action. An AWS IAM user secret key.")]
+        [Option("secretkey", Default = Program.DefaultRequestValue, HelpText = "Required Only for RegisterProfile Action. An AWS IAM user secret key.")]
         public string SecretKey
         {
-            get
-            {
+            get {
                 return this._SecretKey;
             }
-            set
-            {
+            set {
                 Assert.IsNotNullOrEmptyString(value);
 
                 this._SecretKey = value;
             }
         }
 
-        public ProfileSettingsBase Profile
+        public CredentialProfile Profile
         {
-            get
-            {
-                if (!this.Known)
-                {
-                    if (!string.IsNullOrEmpty(this.AccessKey) && !string.IsNullOrEmpty(this.SecretKey))
-                    {
-                        Program.RegisterAWSCredentialProfile(this.ProfileName, this.AccessKey, this.SecretKey);
+            get {
+                if (!this.Known) {
+                    if (!string.IsNullOrEmpty(this.AccessKey) && !string.IsNullOrEmpty(this.SecretKey)) {
+                        Program.RegisterAWSCredentialProfile(this.ProfileName, this.AccessKey, this.SecretKey, this.Region);
                     }
                 }
 
@@ -88,32 +79,28 @@ namespace AWSDeploymentAssistant
 
         public AWSCredentials Credential
         {
-            get
-            {
+            get {
                 return Program.GetAWSCredentials(this.ProfileName);
             }
         }
 
         public bool Known
         {
-            get
-            {
+            get {
                 return Program.IsAWSCredentialProfileKnown(this.ProfileName);
             }
         }
 
-        public IEnumerable<ProfileSettingsBase> AllLocalProfiles
+        public IEnumerable<CredentialProfile> AllLocalProfiles
         {
-            get
-            {
+            get {
                 return Program.ListAWSCredentialProfiles();
             }
         }
 
         public bool Unregistered
         {
-            get
-            {
+            get {
                 Program.UnregisterAWSCredentialProfile(this.ProfileName);
 
                 return this.Known;
@@ -123,8 +110,7 @@ namespace AWSDeploymentAssistant
         [Usage(ApplicationAlias = "AWSDeploymentAssistant.exe")]
         public static IEnumerable<Example> Examples
         {
-            get
-            {
+            get {
                 yield return new Example("List Profiles", new ProfileRequest { Action = ProfileRequestAction.List });
                 yield return new Example("Get Profile", new ProfileRequest { Action = ProfileRequestAction.GetProfile, ProfileName = "MyProfile" });
                 yield return new Example("Check If Profile Is Known", new ProfileRequest { Action = ProfileRequestAction.IsKnown, ProfileName = "MyProfile" });

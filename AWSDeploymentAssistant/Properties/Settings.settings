@@ -61,5 +61,14 @@
   &lt;string&gt;.zip&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
+    <Setting Name="LogFolderPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\\temp\\AWS Development Tools\\EC2 Deployment Assistant\\logs</Value>
+    </Setting>
+    <Setting Name="TempFolderPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\\temp\\AWS Development Tools\\EC2 Deployment Assistant\\temp</Value>
+    </Setting>
+    <Setting Name="DefaultProfileName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">default</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
