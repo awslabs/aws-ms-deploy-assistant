@@ -22,7 +22,11 @@ namespace AWSDeploymentAssistant
         private string _AWSCredentialProfile;
         private string _PackageZipName;
 
-        public BuildRequest(string bucketRegion = "us-east-1")
+        public BuildRequest()
+           : this(RegionEndpoint.USEast1.SystemName)
+        {  }
+
+        public BuildRequest(string bucketRegion)
             : base(bucketRegion)
         {
             this._RequestId = Guid.NewGuid();

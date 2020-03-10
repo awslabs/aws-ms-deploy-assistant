@@ -4,7 +4,9 @@
 // accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied. See the License for the specific language governing permissions and limitations
 // under the License.
+using Amazon;
 using Amazon.Runtime;
+using Amazon.Runtime.CredentialManagement;
 using AWSDeploymentAssistant.Properties;
 using CommandLine;
 using log4net;
@@ -12,10 +14,8 @@ using log4net.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Linq;
-using Amazon.Runtime.CredentialManagement;
-using Amazon;
+using System.Reflection;
 
 namespace AWSDeploymentAssistant
 {
@@ -92,27 +92,24 @@ namespace AWSDeploymentAssistant
                                     t.IsAssignableFrom(typeof(UnknownOptionError))) {
                                     // Do Nothing
                                     exitCode = Program.SUCCESS;
-                                }
-                                else if (t.IsAssignableFrom(typeof(NoVerbSelectedError)) ||
-                                         t.IsAssignableFrom(typeof(BadFormatTokenError)) ||
-                                         t.IsAssignableFrom(typeof(BadVerbSelectedError)) ||
-                                         t.IsAssignableFrom(typeof(MissingRequiredOptionError)) ||
-                                         t.IsAssignableFrom(typeof(MissingValueOptionError)) ||
-                                         t.IsAssignableFrom(typeof(MutuallyExclusiveSetError)) ||
-                                         t.IsAssignableFrom(typeof(RepeatedOptionError)) ||
-                                         t.IsAssignableFrom(typeof(SequenceOutOfRangeError))) {
+                                } else if (t.IsAssignableFrom(typeof(NoVerbSelectedError)) ||
+                                           t.IsAssignableFrom(typeof(BadFormatTokenError)) ||
+                                           t.IsAssignableFrom(typeof(BadVerbSelectedError)) ||
+                                           t.IsAssignableFrom(typeof(MissingRequiredOptionError)) ||
+                                           t.IsAssignableFrom(typeof(MissingValueOptionError)) ||
+                                           t.IsAssignableFrom(typeof(MutuallyExclusiveSetError)) ||
+                                           t.IsAssignableFrom(typeof(RepeatedOptionError)) ||
+                                           t.IsAssignableFrom(typeof(SequenceOutOfRangeError))) {
                                     Program.Logger.Error(error.Tag);
                                     exitCode = Program.ERROR_BAD_ARGUMENTS;
                                 }
                             }
                         });
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Program.Logger.Fatal("An error occurred while parsing command line arguments.", ex);
                 exitCode = Program.ERROR;
-            }
-            finally {
+            } finally {
                 Environment.ExitCode = exitCode;
             }
         }
@@ -153,8 +150,7 @@ namespace AWSDeploymentAssistant
                 Console.WriteLine();
                 Console.WriteLine("Press any key to continue.");
                 Console.ReadLine();
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Program.Logger.Fatal("An error occurred while running profile request.", ex);
             }
 
@@ -171,8 +167,7 @@ namespace AWSDeploymentAssistant
                 if (pipeline.Run()) {
                     result = Program.SUCCESS;
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Program.Logger.Fatal("An error occurred while running pipeline.", ex);
             }
 

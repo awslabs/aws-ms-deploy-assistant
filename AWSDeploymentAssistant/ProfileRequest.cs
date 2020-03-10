@@ -25,7 +25,7 @@ namespace AWSDeploymentAssistant
         [Option('a', "action", Default = ProfileRequestAction.None, Required = true, HelpText = "A profile request action. Options: (List, GetProfile, IsKnown, Register, Unregister) - values are case sensitive.")]
         public ProfileRequestAction Action { get; set; }
 
-        [Option('n', "name", HelpText = "Required for GetProfile, IsKonwn, RegisterProfile and UnregisterProfile Actions. A profile name.")]
+        [Option('n', "name", HelpText = "Required for GetProfile, IsKnown, RegisterProfile and UnregisterProfile Actions. A profile name.")]
         public string ProfileName
         {
             get {
